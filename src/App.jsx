@@ -30,72 +30,46 @@ var REVIEWS = [
   { name: "Zuo", prop: "Skyline Studio", text: "Safe walkable streets. Clean, modern. Extremely friendly host!" },
 ];
 
-var LOCATIONS = [
-  { id: "all", label: "All" },
-  { id: "SM", label: "Santa Monica" },
-  { id: "LB", label: "Long Beach" },
-  { id: "SL", label: "Silver Lake" },
-];
-
+var LOCATIONS = [{ id: "all", label: "All" },{ id: "SM", label: "Santa Monica" },{ id: "LB", label: "Long Beach" },{ id: "SL", label: "Silver Lake" }];
 var MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 var DAY_LABELS = ["S","M","T","W","T","F","S"];
 
 function makeBookedSet(propertyId) {
-  var booked = {};
-  var seed = 0;
+  var booked = {};var seed = 0;
   for (var i = 0; i < propertyId.length; i++) seed = seed + propertyId.charCodeAt(i);
   var now = new Date();
   for (var j = 0; j < 90; j++) {
     var val = ((seed * 9301 + 49297 + j * 1327) % 233280) / 233280;
-    if (val < 0.35) {
-      var d = new Date(now.getTime());
-      d.setDate(d.getDate() + j);
-      var key = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-      booked[key] = true;
-    }
+    if (val < 0.35) { var d = new Date(now.getTime()); d.setDate(d.getDate() + j); var key = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); booked[key] = true; }
   }
   return booked;
 }
 
-function formatDate(year, month, day) {
-  return year + "-" + String(month+1).padStart(2,"0") + "-" + String(day).padStart(2,"0");
-}
+function formatDate(year, month, day) { return year + "-" + String(month+1).padStart(2,"0") + "-" + String(day).padStart(2,"0"); }
 
 function calcPrice(prop, checkin, checkout) {
   if (!checkin || !checkout) return null;
   var nights = Math.round((new Date(checkout) - new Date(checkin)) / 86400000);
   if (nights <= 0) return null;
-  var sub = prop.price * nights;
-  var cl = prop.clean || 0;
-  var tot = Math.round((sub + cl) * prop.tax);
-  var total = sub + cl + tot;
-  var saved = Math.round((sub + cl) * 0.14);
+  var sub = prop.price * nights, cl = prop.clean || 0, tot = Math.round((sub + cl) * prop.tax), total = sub + cl + tot, saved = Math.round((sub + cl) * 0.14);
   return { nights: nights, sub: sub, cl: cl, tot: tot, total: total, saved: saved };
 }
 
-function StarIcon() {
-  return <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84L18 6.71l-4 3.9.94 5.51L10 13.49l-4.94 2.63L6 10.61l-4-3.9 5.61-.87z" /></svg>;
-}
+function StarIcon() { return <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84L18 6.71l-4 3.9.94 5.51L10 13.49l-4.94 2.63L6 10.61l-4-3.9 5.61-.87z" /></svg>; }
 
 function PhotoGrid(props) {
   var images = props.images;
-  var activeState = useState(0);
-  var active = activeState[0];
-  var setActive = activeState[1];
+  var st = useState(0); var active = st[0]; var setActive = st[1];
   return (
     <div>
-      <div style={{ width: "100%", aspectRatio: "4/3", borderRadius: 4, overflow: "hidden", marginBottom: 6 }}>
-        <img src={images[active]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+      <div style={{ width:"100%", aspectRatio:"4/3", borderRadius:4, overflow:"hidden", marginBottom:6 }}>
+        <img src={images[active]} alt="" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
       </div>
-      <div style={{ display: "flex", gap: 4 }}>
+      <div style={{ display:"flex", gap:4 }}>
         {images.map(function(src, i) {
-          return (
-            <div key={i} onClick={function() { setActive(i); }}
-              style={{ flex: 1, aspectRatio: "1", borderRadius: 3, overflow: "hidden", cursor: "pointer",
-                opacity: i === active ? 1 : 0.5, outline: i === active ? "2px solid #1a1a1a" : "none", outlineOffset: 1 }}>
-              <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-            </div>
-          );
+          return <div key={i} onClick={function(){ setActive(i); }} style={{ flex:1, aspectRatio:"1", borderRadius:3, overflow:"hidden", cursor:"pointer", opacity: i === active ? 1 : 0.5, outline: i === active ? "2px solid #1a1a1a" : "none", outlineOffset:1 }}>
+            <img src={src} alt="" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+          </div>;
         })}
       </div>
     </div>
@@ -103,42 +77,28 @@ function PhotoGrid(props) {
 }
 
 function Calendar(props) {
-  var propertyId = props.propertyId;
-  var checkin = props.checkin;
-  var checkout = props.checkout;
-  var onSelect = props.onSelect;
-  var today = new Date();
-  var todayStr = formatDate(today.getFullYear(), today.getMonth(), today.getDate());
-  var monthState = useState(today.getMonth());
-  var viewMonth = monthState[0]; var setViewMonth = monthState[1];
-  var yearState = useState(today.getFullYear());
-  var viewYear = yearState[0]; var setViewYear = yearState[1];
-  var bookedState = useState(function() { return makeBookedSet(propertyId); });
-  var booked = bookedState[0];
+  var propertyId = props.propertyId; var checkin = props.checkin; var checkout = props.checkout; var onSelect = props.onSelect;
+  var today = new Date(); var todayStr = formatDate(today.getFullYear(), today.getMonth(), today.getDate());
+  var ms = useState(today.getMonth()); var viewMonth = ms[0]; var setViewMonth = ms[1];
+  var ys = useState(today.getFullYear()); var viewYear = ys[0]; var setViewYear = ys[1];
+  var bs = useState(function() { return makeBookedSet(propertyId); }); var booked = bs[0];
   var daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
   var firstDay = new Date(viewYear, viewMonth, 1).getDay();
   var cells = [];
-  for (var e = 0; e < firstDay; e++) cells.push({ day: 0, key: "empty-"+e });
+  for (var e = 0; e < firstDay; e++) cells.push({ day:0, key:"empty-"+e });
   for (var d = 1; d <= daysInMonth; d++) {
     var dateStr = formatDate(viewYear, viewMonth, d);
-    var isPast = dateStr < todayStr;
-    var isBooked = booked[dateStr] === true;
-    var isCI = dateStr === checkin;
-    var isCO = dateStr === checkout;
-    var isInRange = checkin && checkout && dateStr > checkin && dateStr < checkout;
-    cells.push({ day: d, key: "d-"+d, dateStr: dateStr, isPast: isPast, isBooked: isBooked, isCI: isCI, isCO: isCO, isInRange: isInRange, ok: !isPast && !isBooked });
+    cells.push({ day:d, key:"d-"+d, dateStr:dateStr, isPast: dateStr < todayStr, isBooked: booked[dateStr] === true,
+      isCI: dateStr === checkin, isCO: dateStr === checkout, isInRange: checkin && checkout && dateStr > checkin && dateStr < checkout,
+      ok: dateStr >= todayStr && booked[dateStr] !== true });
   }
   function handleClick(dateStr) {
     if (!checkin || (checkin && checkout)) { onSelect(dateStr, null); }
     else if (dateStr <= checkin) { onSelect(dateStr, null); }
-    else {
-      var cur = new Date(checkin); cur.setDate(cur.getDate()+1); var end = new Date(dateStr); var blocked = false;
+    else { var cur = new Date(checkin); cur.setDate(cur.getDate()+1); var end = new Date(dateStr); var blocked = false;
       while (cur < end) { var ck = cur.getFullYear()+"-"+String(cur.getMonth()+1).padStart(2,"0")+"-"+String(cur.getDate()).padStart(2,"0"); if(booked[ck]){blocked=true;break;} cur.setDate(cur.getDate()+1); }
-      blocked ? onSelect(dateStr, null) : onSelect(checkin, dateStr);
-    }
+      blocked ? onSelect(dateStr, null) : onSelect(checkin, dateStr); }
   }
-  function prevMonth() { if(viewMonth===0){setViewMonth(11);setViewYear(viewYear-1);}else{setViewMonth(viewMonth-1);} }
-  function nextMonth() { if(viewMonth===11){setViewMonth(0);setViewYear(viewYear+1);}else{setViewMonth(viewMonth+1);} }
   function getStyle(cell) {
     if (cell.isCI||cell.isCO) return {background:"#1a1a1a",color:"#FAF7F2",fontWeight:700,borderRadius:cell.isCI?"4px 0 0 4px":"0 4px 4px 0"};
     if (cell.isInRange) return {background:"rgba(58,107,138,0.15)",color:"#3a6b8a"};
@@ -149,17 +109,14 @@ function Calendar(props) {
   return (
     <div style={{marginTop:12}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-        <button onClick={prevMonth} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,padding:4}}>{"<"}</button>
+        <button onClick={function(){if(viewMonth===0){setViewMonth(11);setViewYear(viewYear-1);}else{setViewMonth(viewMonth-1);}}} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,padding:4}}>{"<"}</button>
         <span style={{fontSize:12,fontWeight:600}}>{MONTH_NAMES[viewMonth]} {viewYear}</span>
-        <button onClick={nextMonth} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,padding:4}}>{">"}</button>
+        <button onClick={function(){if(viewMonth===11){setViewMonth(0);setViewYear(viewYear+1);}else{setViewMonth(viewMonth+1);}}} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,padding:4}}>{">"}</button>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:2,textAlign:"center"}}>
         {DAY_LABELS.map(function(label,idx){return <div key={"lbl-"+idx} style={{fontSize:9,color:"#8a8278",fontWeight:600,padding:2}}>{label}</div>;})}
-        {cells.map(function(cell){
-          if(cell.day===0)return <div key={cell.key}/>;
-          var st=getStyle(cell);
-          return <div key={cell.key} onClick={function(){if(cell.ok)handleClick(cell.dateStr);}} style={{fontSize:11,fontWeight:st.fontWeight||500,padding:"6px 0",borderRadius:st.borderRadius||3,background:st.background||"transparent",color:st.color||"#ccc",cursor:st.cursor||"default"}}>{cell.day}</div>;
-        })}
+        {cells.map(function(cell){if(cell.day===0)return <div key={cell.key}/>;var st=getStyle(cell);
+          return <div key={cell.key} onClick={function(){if(cell.ok)handleClick(cell.dateStr);}} style={{fontSize:11,fontWeight:st.fontWeight||500,padding:"6px 0",borderRadius:st.borderRadius||3,background:st.background||"transparent",color:st.color||"#ccc",cursor:st.cursor||"default"}}>{cell.day}</div>;})}
       </div>
       <div style={{display:"flex",gap:10,marginTop:6,justifyContent:"center",fontSize:9,color:"#8a8278"}}>
         <span><span style={{display:"inline-block",width:7,height:7,borderRadius:2,background:"rgba(139,174,196,0.2)",marginRight:3,verticalAlign:"middle"}}/>Available</span>
@@ -173,8 +130,8 @@ function Calendar(props) {
 
 function PropertyCard(props) {
   var property = props.property; var onBook = props.onBook;
-  var ciState = useState(null); var checkin = ciState[0]; var setCheckin = ciState[1];
-  var coState = useState(null); var checkout = coState[0]; var setCheckout = coState[1];
+  var cs = useState(null); var checkin = cs[0]; var setCheckin = cs[1];
+  var co = useState(null); var checkout = co[0]; var setCheckout = co[1];
   var isMonthly = property.stay === "monthly";
   var pricing = !isMonthly ? calcPrice(property, checkin, checkout) : null;
   return (
@@ -222,38 +179,31 @@ function PropertyCard(props) {
 
 function BookingForm(props) {
   var selected = props.selected; var initCI = props.initCI; var initCO = props.initCO;
-  var formState = useState({name:"",email:"",property:"",checkin:"",checkout:"",agree:false});
-  var form = formState[0]; var setForm = formState[1];
-  var doneState = useState(false); var done = doneState[0]; var setDone = doneState[1];
+  var fs = useState({name:"",email:"",property:"",checkin:"",checkout:"",agree:false}); var form = fs[0]; var setForm = fs[1];
+  var ds = useState(false); var done = ds[0]; var setDone = ds[1];
   useEffect(function(){if(selected){setForm(function(prev){return{name:prev.name,email:prev.email,property:selected.id,checkin:initCI||prev.checkin,checkout:initCO||prev.checkout,agree:prev.agree};});}}, [selected,initCI,initCO]);
   var prop = PROPERTIES.find(function(p){return p.id===form.property;});
   var isMonthly = prop && prop.stay === "monthly";
   var pricing = prop && !isMonthly ? calcPrice(prop, form.checkin, form.checkout) : null;
-  if (done) return (
-    <div style={{textAlign:"center",padding:40}}>
-      <div style={{fontSize:48}}>🎉</div>
-      <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,marginTop:10}}>{isMonthly?"Inquiry Sent!":"Confirmed!"}</h3>
-      <p style={{fontSize:13,color:"#6b635a",marginTop:8}}>Brandon responds within an hour.</p>
-    </div>
-  );
-  var inputStyle = {fontFamily:"'DM Sans',sans-serif",fontSize:13,padding:"10px 12px",border:"1.5px solid rgba(0,0,0,0.1)",background:"#fff",outline:"none",width:"100%",color:"#1a1a1a"};
-  var labelStyle = {fontSize:10,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8278",display:"block",marginBottom:4};
+  if (done) return (<div style={{textAlign:"center",padding:40}}><div style={{fontSize:48}}>🎉</div><h3 style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,marginTop:10}}>{isMonthly?"Inquiry Sent!":"Confirmed!"}</h3><p style={{fontSize:13,color:"#6b635a",marginTop:8}}>Brandon responds within an hour.</p></div>);
+  var is = {fontFamily:"'DM Sans',sans-serif",fontSize:13,padding:"10px 12px",border:"1.5px solid rgba(0,0,0,0.1)",background:"#fff",outline:"none",width:"100%",color:"#1a1a1a"};
+  var ls = {fontSize:10,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8278",display:"block",marginBottom:4};
   function update(key,val){var next={};for(var k in form)next[k]=form[k];next[key]=val;setForm(next);}
   return (
     <div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}} className="formgrid">
-        <div><label style={labelStyle}>Name *</label><input style={inputStyle} value={form.name} onChange={function(e){update("name",e.target.value);}}/></div>
-        <div><label style={labelStyle}>Email *</label><input style={inputStyle} type="email" value={form.email} onChange={function(e){update("email",e.target.value);}}/></div>
+        <div><label style={ls}>Name *</label><input style={is} value={form.name} onChange={function(e){update("name",e.target.value);}}/></div>
+        <div><label style={ls}>Email *</label><input style={is} type="email" value={form.email} onChange={function(e){update("email",e.target.value);}}/></div>
       </div>
-      <div style={{marginBottom:12}}><label style={labelStyle}>Property *</label>
-        <select style={Object.assign({},inputStyle,{cursor:"pointer"})} value={form.property} onChange={function(e){update("property",e.target.value);}}>
+      <div style={{marginBottom:12}}><label style={ls}>Property *</label>
+        <select style={Object.assign({},is,{cursor:"pointer"})} value={form.property} onChange={function(e){update("property",e.target.value);}}>
           <option value="">Select a property</option>
           {PROPERTIES.map(function(p){return <option key={p.id} value={p.id}>{p.name}</option>;})}
         </select>
       </div>
       {!isMonthly && <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}} className="formgrid">
-        <div><label style={labelStyle}>Check-in</label><input style={inputStyle} type="date" value={form.checkin} onChange={function(e){update("checkin",e.target.value);}}/></div>
-        <div><label style={labelStyle}>Check-out</label><input style={inputStyle} type="date" value={form.checkout} onChange={function(e){update("checkout",e.target.value);}}/></div>
+        <div><label style={ls}>Check-in</label><input style={is} type="date" value={form.checkin} onChange={function(e){update("checkin",e.target.value);}}/></div>
+        <div><label style={ls}>Check-out</label><input style={is} type="date" value={form.checkout} onChange={function(e){update("checkout",e.target.value);}}/></div>
       </div>}
       {pricing && <div style={{background:"rgba(139,174,196,0.06)",border:"1px solid rgba(139,174,196,0.15)",padding:14,marginBottom:14,fontSize:13,display:"flex",justifyContent:"space-between",fontWeight:700}}><span>Total</span><span>{"$"+pricing.total}</span></div>}
       <div style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:14}}>
@@ -268,10 +218,10 @@ function BookingForm(props) {
 }
 
 export default function App() {
-  var locState = useState("all"); var locFilter = locState[0]; var setLocFilter = locState[1];
-  var spState = useState(null); var selectedProp = spState[0]; var setSelectedProp = spState[1];
-  var ciState = useState(""); var bookCI = ciState[0]; var setBookCI = ciState[1];
-  var coState = useState(""); var bookCO = coState[0]; var setBookCO = coState[1];
+  var ls = useState("all"); var locFilter = ls[0]; var setLocFilter = ls[1];
+  var ss = useState(null); var selectedProp = ss[0]; var setSelectedProp = ss[1];
+  var ci = useState(""); var bookCI = ci[0]; var setBookCI = ci[1];
+  var co = useState(""); var bookCO = co[0]; var setBookCO = co[1];
   function scrollTo(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"});}
   var filtered = locFilter==="all" ? PROPERTIES : PROPERTIES.filter(function(p){return p.loc===locFilter;});
   function handleBook(prop,ci,co){setSelectedProp(prop);setBookCI(ci||"");setBookCO(co||"");scrollTo("book");}

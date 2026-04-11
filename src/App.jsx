@@ -83,8 +83,7 @@ function HeroCarousel() {
           backgroundSize:"cover",backgroundPosition:"center",
           opacity: i === idx ? 1 : 0,
           transition:"opacity 1.8s ease-in-out",
-          transform: i === idx ? "scale(1.05)" : "scale(1)",
-          willChange:"opacity,transform"
+          willChange:"opacity"
         }}/>;
       })}
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(26,26,26,0.3) 0%,rgba(26,26,26,0.5) 50%,rgba(26,26,26,0.75) 100%)"}}/>
@@ -348,7 +347,7 @@ export default function App() {
         <div style={{maxWidth:800,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1.4fr",gap:48,alignItems:"center"}} className="propgrid">
           <div>
             <div style={{width:"100%",aspectRatio:"1",borderRadius:6,overflow:"hidden",background:"#e8e3db"}}>
-              <img src="/images/brandon-headshot.jpg" alt="Brandon - Maresol host" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />
+              <img src="/images/brandon-headshot.jpeg" alt="Brandon - Maresol host" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />
             </div>
           </div>
           <div>

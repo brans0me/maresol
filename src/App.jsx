@@ -71,6 +71,9 @@ function HeroCarousel() {
     var timer = setInterval(function() { setIdx(function(prev) { return (prev + 1) % HERO_IMAGES.length; }); }, 5000);
     return function() { clearInterval(timer); };
   }, []);
+  function goPrev() { setIdx(function(prev) { return (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length; }); }
+  function goNext() { setIdx(function(prev) { return (prev + 1) % HERO_IMAGES.length; }); }
+  var arrowStyle = {position:"absolute",top:"50%",transform:"translateY(-50%)",zIndex:3,background:"rgba(0,0,0,0.35)",color:"#fff",border:"none",cursor:"pointer",width:44,height:44,borderRadius:"50%",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)",transition:"background 0.3s"};
   return (
     <div style={{position:"absolute",inset:0,overflow:"hidden"}}>
       {HERO_IMAGES.map(function(img, i) {
@@ -85,6 +88,8 @@ function HeroCarousel() {
         }}/>;
       })}
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(26,26,26,0.3) 0%,rgba(26,26,26,0.5) 50%,rgba(26,26,26,0.75) 100%)"}}/>
+      <button onClick={goPrev} style={Object.assign({},arrowStyle,{left:16})}>&#8249;</button>
+      <button onClick={goNext} style={Object.assign({},arrowStyle,{right:16})}>&#8250;</button>
       <div style={{position:"absolute",bottom:24,left:0,right:0,display:"flex",justifyContent:"center",gap:8,zIndex:2}}>
         {HERO_IMAGES.map(function(img, i) {
           return <button key={i} onClick={function(){setIdx(i);}} style={{

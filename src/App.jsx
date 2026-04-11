@@ -73,7 +73,7 @@ function HeroCarousel() {
   }, []);
   function goPrev() { setIdx(function(prev) { return (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length; }); }
   function goNext() { setIdx(function(prev) { return (prev + 1) % HERO_IMAGES.length; }); }
-  var arrowStyle = {position:"absolute",top:"50%",transform:"translateY(-50%)",zIndex:3,background:"rgba(0,0,0,0.35)",color:"#fff",border:"none",cursor:"pointer",width:44,height:44,borderRadius:"50%",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)",transition:"background 0.3s"};
+  var arrowStyle = {position:"absolute",top:"75%",transform:"translateY(-50%)",zIndex:3,background:"rgba(0,0,0,0.3)",color:"#fff",border:"none",cursor:"pointer",width:36,height:36,borderRadius:"50%",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)",transition:"background 0.3s"};
   return (
     <div style={{position:"absolute",inset:0,overflow:"hidden"}}>
       {HERO_IMAGES.map(function(img, i) {
@@ -175,14 +175,11 @@ function Calendar(props) {
 
 function PropertyCard(props) {
   var property = props.property; var onBook = props.onBook;
-  var cs = useState(null); var checkin = cs[0]; var setCheckin = cs[1];
-  var co = useState(null); var checkout = co[0]; var setCheckout = co[1];
   var isMonthly = property.stay === "monthly";
-  var pricing = !isMonthly ? calcPrice(property, checkin, checkout) : null;
   return (
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,marginBottom:56}} className="propgrid">
       <div><PhotoGrid images={property.images} /></div>
-      <div>
+      <div style={{display:"flex",flexDirection:"column",justifyContent:"center"}}>
         <div style={{display:"flex",gap:6,alignItems:"center",marginBottom:6}}>
           <span style={{fontSize:10,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:"#8a8278"}}>{property.type}</span>
           {isMonthly && <span style={{fontSize:9,fontWeight:600,color:"#8a5a3a",background:"rgba(196,168,130,0.15)",padding:"2px 6px"}}>MONTHLY ONLY</span>}
@@ -190,33 +187,24 @@ function PropertyCard(props) {
         </div>
         <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:21,fontWeight:700,color:"#1a1a1a",marginBottom:2}}>{property.name}</h3>
         <p style={{fontSize:11,color:"#8a8278",marginBottom:8}}>{property.area}</p>
-        <p style={{fontSize:12,color:"#6b635a",lineHeight:1.7,marginBottom:10}}>{property.desc}</p>
-        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+        <p style={{fontSize:12,color:"#6b635a",lineHeight:1.7,marginBottom:12}}>{property.desc}</p>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{color:"#c4952a",display:"flex",alignItems:"center",gap:3}}><StarIcon/><b style={{color:"#1a1a1a",fontSize:13}}>{property.rate}</b></span>
           <span style={{fontSize:12,color:"#8a8278"}}>{property.revs} reviews</span>
         </div>
-        {isMonthly ? (
-          <div style={{marginBottom:8}}><span style={{fontFamily:"'Playfair Display',serif",fontSize:21,fontWeight:700}}>{"$"+property.monthly.toLocaleString()}</span><span style={{fontSize:12,color:"#8a8278",marginLeft:4}}>/ month</span></div>
-        ) : (
-          <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4,flexWrap:"wrap"}}>
-            <span style={{fontFamily:"'Playfair Display',serif",fontSize:21,fontWeight:700}}>{"$"+property.price}</span>
-            <span style={{fontSize:12,color:"#8a8278"}}>/ night</span>
-            <span style={{fontSize:9,color:"#3a6b8a",background:"rgba(139,174,196,0.12)",padding:"2px 6px",fontWeight:600}}>SAVE ~14%</span>
-          </div>
-        )}
-        {pricing && (
-          <div style={{background:"rgba(139,174,196,0.06)",border:"1px solid rgba(139,174,196,0.15)",padding:12,marginTop:6,marginBottom:6,fontSize:12}}>
-            <div style={{display:"flex",justifyContent:"space-between",color:"#4a4a4a",marginBottom:3}}><span>{"$"+property.price+" x "+pricing.nights+" nights"}</span><span>{"$"+pricing.sub}</span></div>
-            {pricing.cl > 0 && <div style={{display:"flex",justifyContent:"space-between",color:"#4a4a4a",marginBottom:3}}><span>Cleaning</span><span>{"$"+pricing.cl}</span></div>}
-            <div style={{display:"flex",justifyContent:"space-between",color:"#4a4a4a",marginBottom:3}}><span>{"Tax ("+Math.round(property.tax*100)+"%)"}</span><span>{"$"+pricing.tot}</span></div>
-            <div style={{display:"flex",justifyContent:"space-between",color:"#3a6b8a",marginBottom:3}}><span>Airbnb fee</span><span>{"$0 (save $"+pricing.saved+")"}</span></div>
-            <div style={{display:"flex",justifyContent:"space-between",fontWeight:700,fontSize:14,borderTop:"1px solid rgba(0,0,0,0.1)",paddingTop:6,marginTop:3}}><span>Total</span><span>{"$"+pricing.total}</span></div>
-          </div>
-        )}
-        {!isMonthly && <Calendar propertyId={property.id} checkin={checkin} checkout={checkout} onSelect={function(ci,co){setCheckin(ci);setCheckout(co);}} />}
-        <button onClick={function(){onBook(property,checkin,checkout);}} style={{marginTop:14,fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase",padding:"11px 22px",background:"#1a1a1a",color:"#FAF7F2",border:"none",cursor:"pointer"}}>
-          {isMonthly ? "Inquire" : pricing ? "Book $"+pricing.total+" Now" : "Select Dates"}
-        </button>
+        <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:16,flexWrap:"wrap"}}>
+          {isMonthly ? (
+            <span><span style={{fontFamily:"'Playfair Display',serif",fontSize:21,fontWeight:700}}>{"$"+property.monthly.toLocaleString()}</span><span style={{fontSize:12,color:"#8a8278",marginLeft:4}}>/ month</span></span>
+          ) : (
+            <span><span style={{fontFamily:"'Playfair Display',serif",fontSize:21,fontWeight:700}}>{"$"+property.price}</span><span style={{fontSize:12,color:"#8a8278",marginLeft:4}}>/ night</span></span>
+          )}
+          {!isMonthly && <span style={{fontSize:9,color:"#3a6b8a",background:"rgba(139,174,196,0.12)",padding:"2px 6px",fontWeight:600}}>SAVE ~14% VS AIRBNB</span>}
+        </div>
+        <div style={{display:"flex",gap:10}}>
+          <button onClick={function(){onBook(property,null,null);}} style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase",padding:"11px 22px",background:"#1a1a1a",color:"#FAF7F2",border:"none",cursor:"pointer"}}>
+            {isMonthly ? "Inquire" : "View Property"}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -286,36 +274,52 @@ export default function App() {
   var ss = useState(null); var selectedProp = ss[0]; var setSelectedProp = ss[1];
   var ci = useState(""); var bookCI = ci[0]; var setBookCI = ci[1];
   var co = useState(""); var bookCO = co[0]; var setBookCO = co[1];
-  function scrollTo(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"});}
+  var ms = useState(false); var menuOpen = ms[0]; var setMenuOpen = ms[1];
+  function scrollTo(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"});setMenuOpen(false);}
   var filtered = locFilter==="all" ? PROPERTIES : PROPERTIES.filter(function(p){return p.loc===locFilter;});
   function handleBook(prop,ci,co){setSelectedProp(prop);setBookCI(ci||"");setBookCO(co||"");scrollTo("book");}
+  var navLinks = ["properties","about","book","contact"];
 
   return (
     <div style={{background:"#FAF7F2",minHeight:"100vh",fontFamily:"'DM Sans', sans-serif"}}>
       <style>{
         "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap');"+
         "*{box-sizing:border-box;margin:0;padding:0}"+
-        "@media(max-width:768px){.propgrid,.formgrid{grid-template-columns:1fr!important}.revgrid{grid-template-columns:1fr 1fr!important}}"
+        "@media(max-width:768px){.propgrid,.formgrid{grid-template-columns:1fr!important}.revgrid{grid-template-columns:1fr 1fr!important}}"+
+        "@keyframes bounceDown{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}"
       }</style>
 
       <div style={{position:"fixed",top:0,left:0,right:0,zIndex:100,background:"rgba(20,18,16,0.8)",backdropFilter:"blur(12px)",borderBottom:"1px solid rgba(255,255,255,0.08)",padding:"12px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <span onClick={function(){scrollTo("hero");}} style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:"#FAF7F2",cursor:"pointer"}}>Maresol</span>
-        <div style={{display:"flex",gap:20}}>
-          <span onClick={function(){scrollTo("properties");}} style={{fontSize:12,fontWeight:500,color:"rgba(250,247,242,0.7)",textTransform:"uppercase",cursor:"pointer",letterSpacing:"0.06em"}}>Properties</span>
-          <span onClick={function(){scrollTo("about");}} style={{fontSize:12,fontWeight:500,color:"rgba(250,247,242,0.7)",textTransform:"uppercase",cursor:"pointer",letterSpacing:"0.06em"}}>About</span>
-          <span onClick={function(){scrollTo("book");}} style={{fontSize:12,fontWeight:500,color:"rgba(250,247,242,0.7)",textTransform:"uppercase",cursor:"pointer",letterSpacing:"0.06em"}}>Book</span>
-          <span onClick={function(){scrollTo("contact");}} style={{fontSize:12,fontWeight:500,color:"rgba(250,247,242,0.7)",textTransform:"uppercase",cursor:"pointer",letterSpacing:"0.06em"}}>Contact</span>
-        </div>
+        <button onClick={function(){setMenuOpen(!menuOpen);}} style={{background:"none",border:"none",cursor:"pointer",padding:4,display:"flex",flexDirection:"column",gap:5,width:28}}>
+          <span style={{display:"block",width:"100%",height:2,background:"#FAF7F2",borderRadius:1,transition:"all 0.3s",transform:menuOpen?"rotate(45deg) translateY(7px)":"none"}}/>
+          <span style={{display:"block",width:"100%",height:2,background:"#FAF7F2",borderRadius:1,transition:"all 0.3s",opacity:menuOpen?0:1}}/>
+          <span style={{display:"block",width:"100%",height:2,background:"#FAF7F2",borderRadius:1,transition:"all 0.3s",transform:menuOpen?"rotate(-45deg) translateY(-7px)":"none"}}/>
+        </button>
       </div>
+      {menuOpen && <div style={{position:"fixed",top:50,left:0,right:0,bottom:0,zIndex:99,background:"rgba(20,18,16,0.95)",backdropFilter:"blur(16px)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:32}}>
+        {navLinks.map(function(link){return <span key={link} onClick={function(){scrollTo(link);}} style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#FAF7F2",cursor:"pointer",textTransform:"capitalize",letterSpacing:"0.02em"}}>{link}</span>;})}
+      </div>}
 
       <section id="hero" style={{position:"relative",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",textAlign:"center",padding:"100px 20px 80px",overflow:"hidden"}}>
         <HeroCarousel />
-        <div style={{position:"relative",zIndex:2}}>
-          <p style={{fontSize:10,fontWeight:600,letterSpacing:"0.25em",textTransform:"uppercase",color:"rgba(250,247,242,0.7)",marginBottom:20}}>Superhost | 275+ Reviews | 4.86 | 13 Years</p>
-          <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:"clamp(48px,11vw,96px)",fontWeight:700,color:"#FAF7F2",marginBottom:16,lineHeight:1,textShadow:"0 2px 40px rgba(0,0,0,0.3)"}}>Maresol</h1>
-          <p style={{fontSize:"clamp(15px,2.5vw,20px)",color:"rgba(250,247,242,0.9)",maxWidth:480,marginBottom:10,fontWeight:400}}>Curated stays across Los Angeles</p>
-          <p style={{fontSize:13,color:"rgba(250,247,242,0.55)",maxWidth:400,marginBottom:36,lineHeight:1.7}}>Santa Monica, Long Beach, and Silver Lake. Book directly and skip the Airbnb fees.</p>
+        <div style={{position:"relative",zIndex:2,maxWidth:560}}>
+          <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:"clamp(48px,11vw,96px)",fontWeight:700,color:"#FAF7F2",marginBottom:18,lineHeight:1,textShadow:"0 2px 40px rgba(0,0,0,0.3)"}}>Maresol</h1>
+          <p style={{fontSize:"clamp(15px,2.5vw,20px)",color:"rgba(250,247,242,0.9)",marginBottom:10,fontWeight:400}}>Curated stays across Los Angeles</p>
+          <p style={{fontSize:13,color:"rgba(250,247,242,0.55)",maxWidth:420,margin:"0 auto 12px",lineHeight:1.7}}>Santa Monica, Long Beach, and Silver Lake.</p>
+          <p style={{fontSize:13,color:"rgba(250,247,242,0.55)",maxWidth:420,margin:"0 auto 32px",lineHeight:1.7}}>Book directly and skip the Airbnb fees.</p>
           <button onClick={function(){scrollTo("properties");}} style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",padding:"15px 32px",background:"rgba(250,247,242,0.95)",color:"#1a1a1a",border:"none",cursor:"pointer"}}>Browse Properties</button>
+          <div style={{display:"flex",justifyContent:"center",gap:28,marginTop:32}}>
+            <div><span style={{fontSize:18,fontWeight:700,color:"#FAF7F2"}}>500+</span><p style={{fontSize:9,color:"rgba(250,247,242,0.5)",letterSpacing:"0.1em",marginTop:2}}>STAYS</p></div>
+            <div style={{width:1,background:"rgba(250,247,242,0.2)"}}/>
+            <div><span style={{fontSize:18,fontWeight:700,color:"#FAF7F2"}}>★ 4.9</span><p style={{fontSize:9,color:"rgba(250,247,242,0.5)",letterSpacing:"0.1em",marginTop:2}}>RATING</p></div>
+            <div style={{width:1,background:"rgba(250,247,242,0.2)"}}/>
+            <div><span style={{fontSize:18,fontWeight:700,color:"#FAF7F2"}}>5</span><p style={{fontSize:9,color:"rgba(250,247,242,0.5)",letterSpacing:"0.1em",marginTop:2}}>PROPERTIES</p></div>
+          </div>
+        </div>
+        <div onClick={function(){scrollTo("properties");}} style={{position:"absolute",bottom:48,left:"50%",transform:"translateX(-50%)",zIndex:2,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:4,animation:"bounceDown 2s ease-in-out infinite"}}>
+          <span style={{fontSize:9,color:"rgba(250,247,242,0.45)",letterSpacing:"0.15em",textTransform:"uppercase"}}>Explore</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,247,242,0.45)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
         </div>
       </section>
 
@@ -356,8 +360,8 @@ export default function App() {
             <p style={{fontSize:13,color:"#6b635a",lineHeight:1.8,marginBottom:14}}>I started hosting on Airbnb over 13 years ago with a single guesthouse in Santa Monica. Today, Maresol is a curated collection of five properties across LA's best neighborhoods — each one personally designed, maintained, and managed by me.</p>
             <p style={{fontSize:13,color:"#6b635a",lineHeight:1.8,marginBottom:14}}>Every property is stocked with quality linens, fast Wi-Fi, and the kind of thoughtful touches that make you feel at home. I respond within an hour and I'm always available if you need anything during your stay.</p>
             <div style={{display:"flex",gap:24,marginTop:20}}>
-              <div><span style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#1a1a1a"}}>275+</span><p style={{fontSize:10,color:"#8a8278",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",marginTop:2}}>Reviews</p></div>
-              <div><span style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#1a1a1a"}}>4.86</span><p style={{fontSize:10,color:"#8a8278",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",marginTop:2}}>Rating</p></div>
+              <div><span style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#1a1a1a"}}>500+</span><p style={{fontSize:10,color:"#8a8278",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",marginTop:2}}>Stays</p></div>
+              <div><span style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#1a1a1a"}}>4.9</span><p style={{fontSize:10,color:"#8a8278",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",marginTop:2}}>Rating</p></div>
               <div><span style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#1a1a1a"}}>13</span><p style={{fontSize:10,color:"#8a8278",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",marginTop:2}}>Years</p></div>
               <div><span style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#c4952a"}}>★</span><p style={{fontSize:10,color:"#8a8278",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",marginTop:2}}>Superhost</p></div>
             </div>
@@ -373,24 +377,20 @@ export default function App() {
 
       <section id="contact" style={{padding:"70px 20px",background:"#F5F1EB"}}>
         <div style={{maxWidth:600,margin:"0 auto",textAlign:"center"}}>
-          <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#1a1a1a",marginBottom:8}}>Get in Touch</h2>
-          <p style={{fontSize:13,color:"#8a8278",marginBottom:32,lineHeight:1.7}}>Questions about a property, availability, or long-term stays? Reach out and I'll get back to you within an hour.</p>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:20,marginBottom:36}} className="revgrid">
-            <div style={{background:"#fff",padding:24,border:"1px solid rgba(0,0,0,0.06)"}}>
-              <div style={{fontSize:22,marginBottom:8}}>✉️</div>
+          <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#1a1a1a",marginBottom:6}}>Get in Touch</h2>
+          <p style={{fontSize:13,color:"#8a8278",marginBottom:6,lineHeight:1.7}}>Questions about a property, availability, or long-term stays?</p>
+          <p style={{fontSize:12,color:"#6b635a",marginBottom:32}}>I typically respond in under an hour.</p>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:36}} className="formgrid">
+            <a href="mailto:hello@maresol.com" style={{textDecoration:"none",background:"#fff",padding:28,border:"1px solid rgba(0,0,0,0.06)",cursor:"pointer",transition:"box-shadow 0.2s",display:"block"}}>
+              <div style={{fontSize:24,marginBottom:10}}>✉️</div>
               <p style={{fontSize:10,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:"#8a8278",marginBottom:4}}>Email</p>
-              <p style={{fontSize:13,color:"#1a1a1a",fontWeight:500}}>hello@maresol.com</p>
-            </div>
-            <div style={{background:"#fff",padding:24,border:"1px solid rgba(0,0,0,0.06)"}}>
-              <div style={{fontSize:22,marginBottom:8}}>📱</div>
+              <p style={{fontSize:14,color:"#1a1a1a",fontWeight:600}}>hello@maresol.com</p>
+            </a>
+            <a href="tel:4153610175" style={{textDecoration:"none",background:"#fff",padding:28,border:"1px solid rgba(0,0,0,0.06)",cursor:"pointer",transition:"box-shadow 0.2s",display:"block"}}>
+              <div style={{fontSize:24,marginBottom:10}}>📱</div>
               <p style={{fontSize:10,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:"#8a8278",marginBottom:4}}>Text or Call</p>
-              <p style={{fontSize:13,color:"#1a1a1a",fontWeight:500}}>415-361-0175</p>
-            </div>
-            <div style={{background:"#fff",padding:24,border:"1px solid rgba(0,0,0,0.06)"}}>
-              <div style={{fontSize:22,marginBottom:8}}>⚡</div>
-              <p style={{fontSize:10,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:"#8a8278",marginBottom:4}}>Response Time</p>
-              <p style={{fontSize:13,color:"#1a1a1a",fontWeight:500}}>Under 1 hour</p>
-            </div>
+              <p style={{fontSize:14,color:"#1a1a1a",fontWeight:600}}>415-361-0175</p>
+            </a>
           </div>
           <ContactForm />
         </div>

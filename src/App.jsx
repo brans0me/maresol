@@ -73,7 +73,7 @@ function HeroCarousel() {
   }, []);
   function goPrev() { setIdx(function(prev) { return (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length; }); }
   function goNext() { setIdx(function(prev) { return (prev + 1) % HERO_IMAGES.length; }); }
-  var arrowStyle = {position:"absolute",top:"75%",transform:"translateY(-50%)",zIndex:3,background:"rgba(0,0,0,0.3)",color:"#fff",border:"none",cursor:"pointer",width:36,height:36,borderRadius:"50%",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)",transition:"background 0.3s"};
+  var arrowStyle = {position:"absolute",top:"50%",transform:"translateY(-50%)",zIndex:3,background:"rgba(0,0,0,0.3)",color:"#fff",border:"none",cursor:"pointer",width:48,height:48,borderRadius:"50%",fontSize:22,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)",transition:"background 0.3s"};
   return (
     <div style={{position:"absolute",inset:0,overflow:"hidden"}}>
       {HERO_IMAGES.map(function(img, i) {
@@ -87,8 +87,8 @@ function HeroCarousel() {
         }}/>;
       })}
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(26,26,26,0.3) 0%,rgba(26,26,26,0.5) 50%,rgba(26,26,26,0.75) 100%)"}}/>
-      <button onClick={goPrev} style={Object.assign({},arrowStyle,{left:16})}>&#8249;</button>
-      <button onClick={goNext} style={Object.assign({},arrowStyle,{right:16})}>&#8250;</button>
+      <button className="hero-arrow" onClick={goPrev} style={Object.assign({},arrowStyle,{left:20})}>&#8249;</button>
+      <button className="hero-arrow" onClick={goNext} style={Object.assign({},arrowStyle,{right:20})}>&#8250;</button>
       <div style={{position:"absolute",bottom:24,left:0,right:0,display:"flex",justifyContent:"center",gap:8,zIndex:2}}>
         {HERO_IMAGES.map(function(img, i) {
           return <button key={i} onClick={function(){setIdx(i);}} style={{
@@ -285,19 +285,23 @@ export default function App() {
       <style>{
         "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap');"+
         "*{box-sizing:border-box;margin:0;padding:0}"+
-        "@media(max-width:768px){.propgrid,.formgrid{grid-template-columns:1fr!important}.revgrid{grid-template-columns:1fr 1fr!important}}"+
+        "@media(max-width:768px){.propgrid,.formgrid{grid-template-columns:1fr!important}.revgrid{grid-template-columns:1fr 1fr!important}.desktop-nav{display:none!important}.hamburger-btn{display:flex!important}.hero-arrow{top:75%!important;width:36px!important;height:36px!important;font-size:16px!important}.explore-indicator{font-size:9px!important}.explore-indicator svg{width:18px!important;height:18px!important}}"+
+        "@media(min-width:769px){.mobile-menu{display:none!important}.hamburger-btn{display:none!important}.desktop-nav{display:flex!important}}"+
         "@keyframes bounceDown{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}"
       }</style>
 
       <div style={{position:"fixed",top:0,left:0,right:0,zIndex:100,background:"rgba(20,18,16,0.8)",backdropFilter:"blur(12px)",borderBottom:"1px solid rgba(255,255,255,0.08)",padding:"12px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <span onClick={function(){scrollTo("hero");}} style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:"#FAF7F2",cursor:"pointer"}}>Maresol</span>
-        <button onClick={function(){setMenuOpen(!menuOpen);}} style={{background:"none",border:"none",cursor:"pointer",padding:4,display:"flex",flexDirection:"column",gap:5,width:28}}>
+        <div className="desktop-nav" style={{display:"flex",gap:20}}>
+          {navLinks.map(function(link){return <span key={link} onClick={function(){scrollTo(link);}} style={{fontSize:12,fontWeight:500,color:"rgba(250,247,242,0.7)",textTransform:"uppercase",cursor:"pointer",letterSpacing:"0.06em"}}>{link}</span>;})}
+        </div>
+        <button className="hamburger-btn" onClick={function(){setMenuOpen(!menuOpen);}} style={{background:"none",border:"none",cursor:"pointer",padding:4,display:"none",flexDirection:"column",gap:5,width:28}}>
           <span style={{display:"block",width:"100%",height:2,background:"#FAF7F2",borderRadius:1,transition:"all 0.3s",transform:menuOpen?"rotate(45deg) translateY(7px)":"none"}}/>
           <span style={{display:"block",width:"100%",height:2,background:"#FAF7F2",borderRadius:1,transition:"all 0.3s",opacity:menuOpen?0:1}}/>
           <span style={{display:"block",width:"100%",height:2,background:"#FAF7F2",borderRadius:1,transition:"all 0.3s",transform:menuOpen?"rotate(-45deg) translateY(-7px)":"none"}}/>
         </button>
       </div>
-      {menuOpen && <div style={{position:"fixed",top:50,left:0,right:0,bottom:0,zIndex:99,background:"rgba(20,18,16,0.95)",backdropFilter:"blur(16px)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:32}}>
+      {menuOpen && <div className="mobile-menu" style={{position:"fixed",top:50,left:0,right:0,bottom:0,zIndex:99,background:"rgba(20,18,16,0.95)",backdropFilter:"blur(16px)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:32}}>
         {navLinks.map(function(link){return <span key={link} onClick={function(){scrollTo(link);}} style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#FAF7F2",cursor:"pointer",textTransform:"capitalize",letterSpacing:"0.02em"}}>{link}</span>;})}
       </div>}
 
@@ -317,9 +321,9 @@ export default function App() {
             <div><span style={{fontSize:18,fontWeight:700,color:"#FAF7F2"}}>5</span><p style={{fontSize:9,color:"rgba(250,247,242,0.5)",letterSpacing:"0.1em",marginTop:2}}>PROPERTIES</p></div>
           </div>
         </div>
-        <div onClick={function(){scrollTo("properties");}} style={{position:"absolute",bottom:48,left:"50%",transform:"translateX(-50%)",zIndex:2,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:4,animation:"bounceDown 2s ease-in-out infinite"}}>
-          <span style={{fontSize:9,color:"rgba(250,247,242,0.45)",letterSpacing:"0.15em",textTransform:"uppercase"}}>Explore</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,247,242,0.45)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        <div className="explore-indicator" onClick={function(){scrollTo("properties");}} style={{position:"absolute",bottom:48,left:"50%",transform:"translateX(-50%)",zIndex:2,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,animation:"bounceDown 2s ease-in-out infinite"}}>
+          <span style={{fontSize:12,color:"rgba(250,247,242,0.45)",letterSpacing:"0.15em",textTransform:"uppercase"}}>Explore</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(250,247,242,0.45)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
         </div>
       </section>
 
@@ -378,8 +382,7 @@ export default function App() {
       <section id="contact" style={{padding:"70px 20px",background:"#F5F1EB"}}>
         <div style={{maxWidth:600,margin:"0 auto",textAlign:"center"}}>
           <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#1a1a1a",marginBottom:6}}>Get in Touch</h2>
-          <p style={{fontSize:13,color:"#8a8278",marginBottom:6,lineHeight:1.7}}>Questions about a property, availability, or long-term stays?</p>
-          <p style={{fontSize:12,color:"#6b635a",marginBottom:32}}>I typically respond in under an hour.</p>
+          <p style={{fontSize:13,color:"#8a8278",marginBottom:32,lineHeight:1.7}}>Questions about a property, availability, or long-term stays?</p>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:36}} className="formgrid">
             <a href="mailto:hello@maresol.com" style={{textDecoration:"none",background:"#fff",padding:28,border:"1px solid rgba(0,0,0,0.06)",cursor:"pointer",transition:"box-shadow 0.2s",display:"block"}}>
               <div style={{fontSize:24,marginBottom:10}}>✉️</div>

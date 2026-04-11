@@ -89,10 +89,10 @@ function HeroCarousel() {
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(26,26,26,0.3) 0%,rgba(26,26,26,0.5) 50%,rgba(26,26,26,0.75) 100%)"}}/>
       <button className="hero-arrow" onClick={goPrev} style={Object.assign({},arrowStyle,{left:20})}>&#8249;</button>
       <button className="hero-arrow" onClick={goNext} style={Object.assign({},arrowStyle,{right:20})}>&#8250;</button>
-      <div style={{position:"absolute",bottom:24,left:0,right:0,display:"flex",justifyContent:"center",gap:8,zIndex:2}}>
+      <div style={{position:"absolute",bottom:12,left:"50%",transform:"translateX(-50%)",display:"flex",justifyContent:"center",gap:10,zIndex:2}}>
         {HERO_IMAGES.map(function(img, i) {
           return <button key={i} onClick={function(){setIdx(i);}} style={{
-            width: i === idx ? 28 : 8, height:8, borderRadius:4, border:"none", cursor:"pointer",
+            width: i === idx ? 32 : 10, height:10, borderRadius:5, border:"none", cursor:"pointer",
             background: i === idx ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.35)",
             transition:"all 0.4s ease"
           }}/>;
@@ -285,7 +285,7 @@ export default function App() {
       <style>{
         "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap');"+
         "*{box-sizing:border-box;margin:0;padding:0}"+
-        "@media(max-width:768px){.propgrid,.formgrid{grid-template-columns:1fr!important}.revgrid{grid-template-columns:1fr 1fr!important}.desktop-nav{display:none!important}.hamburger-btn{display:flex!important}.hero-arrow{top:75%!important;width:36px!important;height:36px!important;font-size:16px!important}.explore-indicator{font-size:9px!important}.explore-indicator svg{width:18px!important;height:18px!important}}"+
+        "@media(max-width:768px){.propgrid,.formgrid{grid-template-columns:1fr!important}.revgrid{grid-template-columns:1fr 1fr!important}.desktop-nav{display:none!important}.hamburger-btn{display:flex!important}.hero-arrow{top:75%!important;width:36px!important;height:36px!important;font-size:16px!important}.explore-indicator{font-size:9px!important}.explore-indicator svg{width:18px!important;height:18px!important}.hero-section{padding-top:70px!important;padding-bottom:40px!important}.hero-explore{bottom:36px!important}}"+
         "@media(min-width:769px){.mobile-menu{display:none!important}.hamburger-btn{display:none!important}.desktop-nav{display:flex!important}}"+
         "@keyframes bounceDown{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}"
       }</style>
@@ -305,7 +305,7 @@ export default function App() {
         {navLinks.map(function(link){return <span key={link} onClick={function(){scrollTo(link);}} style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#FAF7F2",cursor:"pointer",textTransform:"capitalize",letterSpacing:"0.02em"}}>{link}</span>;})}
       </div>}
 
-      <section id="hero" style={{position:"relative",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",textAlign:"center",padding:"100px 20px 80px",overflow:"hidden"}}>
+      <section id="hero" className="hero-section" style={{position:"relative",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",textAlign:"center",padding:"100px 20px 80px",overflow:"hidden"}}>
         <HeroCarousel />
         <div style={{position:"relative",zIndex:2,maxWidth:560}}>
           <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:"clamp(48px,11vw,96px)",fontWeight:700,color:"#FAF7F2",marginBottom:18,lineHeight:1,textShadow:"0 2px 40px rgba(0,0,0,0.3)"}}>Maresol</h1>
@@ -321,9 +321,11 @@ export default function App() {
             <div><span style={{fontSize:18,fontWeight:700,color:"#FAF7F2"}}>5</span><p style={{fontSize:9,color:"rgba(250,247,242,0.5)",letterSpacing:"0.1em",marginTop:2}}>PROPERTIES</p></div>
           </div>
         </div>
-        <div className="explore-indicator" onClick={function(){scrollTo("properties");}} style={{position:"absolute",bottom:48,left:"50%",transform:"translateX(-50%)",zIndex:2,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,animation:"bounceDown 2s ease-in-out infinite"}}>
-          <span style={{fontSize:12,color:"rgba(250,247,242,0.45)",letterSpacing:"0.15em",textTransform:"uppercase"}}>Explore</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(250,247,242,0.45)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        <div className="hero-explore" style={{position:"absolute",bottom:48,left:0,right:0,display:"flex",justifyContent:"center",zIndex:3}}>
+          <div className="explore-indicator" onClick={function(){scrollTo("properties");}} style={{cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,animation:"bounceDown 2s ease-in-out infinite"}}>
+            <span style={{fontSize:12,color:"rgba(250,247,242,0.45)",letterSpacing:"0.15em",textTransform:"uppercase"}}>Explore</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(250,247,242,0.45)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
         </div>
       </section>
 

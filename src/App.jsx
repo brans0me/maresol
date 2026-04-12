@@ -65,12 +65,8 @@ function calcPrice(prop, checkin, checkout) {
 
 function StarIcon() { return <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84L18 6.71l-4 3.9.94 5.51L10 13.49l-4.94 2.63L6 10.61l-4-3.9 5.61-.87z" /></svg>; }
 
-function HeroCarousel() {
-  var st = useState(0); var idx = st[0]; var setIdx = st[1];
-  useEffect(function() {
-    var timer = setInterval(function() { setIdx(function(prev) { return (prev + 1) % HERO_IMAGES.length; }); }, 5000);
-    return function() { clearInterval(timer); };
-  }, []);
+function HeroCarousel(props) {
+  var idx = props.idx; var setIdx = props.setIdx;
   function goPrev() { setIdx(function(prev) { return (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length; }); }
   function goNext() { setIdx(function(prev) { return (prev + 1) % HERO_IMAGES.length; }); }
   var arrowStyle = {position:"absolute",top:"50%",transform:"translateY(-50%)",zIndex:3,background:"rgba(0,0,0,0.3)",color:"#fff",border:"none",cursor:"pointer",width:48,height:48,borderRadius:"50%",fontSize:22,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)",transition:"background 0.3s"};
@@ -89,15 +85,6 @@ function HeroCarousel() {
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(26,26,26,0.3) 0%,rgba(26,26,26,0.5) 50%,rgba(26,26,26,0.75) 100%)"}}/>
       <button className="hero-arrow" onClick={goPrev} style={Object.assign({},arrowStyle,{left:20})}>&#8249;</button>
       <button className="hero-arrow" onClick={goNext} style={Object.assign({},arrowStyle,{right:20})}>&#8250;</button>
-      <div style={{position:"absolute",bottom:12,left:"50%",transform:"translateX(-50%)",display:"flex",justifyContent:"center",gap:10,zIndex:2}}>
-        {HERO_IMAGES.map(function(img, i) {
-          return <button key={i} onClick={function(){setIdx(i);}} style={{
-            width: i === idx ? 32 : 10, height:10, borderRadius:5, border:"none", cursor:"pointer",
-            background: i === idx ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.35)",
-            transition:"all 0.4s ease"
-          }}/>;
-        })}
-      </div>
     </div>
   );
 }
@@ -275,6 +262,11 @@ export default function App() {
   var ci = useState(""); var bookCI = ci[0]; var setBookCI = ci[1];
   var co = useState(""); var bookCO = co[0]; var setBookCO = co[1];
   var ms = useState(false); var menuOpen = ms[0]; var setMenuOpen = ms[1];
+  var hs = useState(0); var heroIdx = hs[0]; var setHeroIdx = hs[1];
+  useEffect(function() {
+    var timer = setInterval(function() { setHeroIdx(function(prev) { return (prev + 1) % HERO_IMAGES.length; }); }, 5000);
+    return function() { clearInterval(timer); };
+  }, []);
   function scrollTo(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"});setMenuOpen(false);}
   var filtered = locFilter==="all" ? PROPERTIES : PROPERTIES.filter(function(p){return p.loc===locFilter;});
   function handleBook(prop,ci,co){setSelectedProp(prop);setBookCI(ci||"");setBookCO(co||"");scrollTo("book");}
@@ -285,7 +277,7 @@ export default function App() {
       <style>{
         "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap');"+
         "*{box-sizing:border-box;margin:0;padding:0}"+
-        "@media(max-width:768px){.propgrid,.formgrid{grid-template-columns:1fr!important}.revgrid{grid-template-columns:1fr 1fr!important}.desktop-nav{display:none!important}.hamburger-btn{display:flex!important}.hero-arrow{top:75%!important;width:36px!important;height:36px!important;font-size:16px!important}.explore-indicator{font-size:9px!important}.explore-indicator svg{width:18px!important;height:18px!important}.hero-section{padding-top:70px!important;padding-bottom:40px!important}.hero-explore{bottom:36px!important}}"+
+        "@media(max-width:768px){.propgrid,.formgrid{grid-template-columns:1fr!important}.revgrid{grid-template-columns:1fr 1fr!important}.desktop-nav{display:none!important}.hamburger-btn{display:flex!important}.hero-arrow{top:75%!important;width:36px!important;height:36px!important;font-size:16px!important}.explore-indicator{font-size:9px!important}.explore-indicator svg{width:18px!important;height:18px!important}.hero-section{padding-top:60px!important;padding-bottom:16px!important}}"+
         "@media(min-width:769px){.mobile-menu{display:none!important}.hamburger-btn{display:none!important}.desktop-nav{display:flex!important}}"+
         "@keyframes bounceDown{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}"
       }</style>
@@ -305,8 +297,8 @@ export default function App() {
         {navLinks.map(function(link){return <span key={link} onClick={function(){scrollTo(link);}} style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#FAF7F2",cursor:"pointer",textTransform:"capitalize",letterSpacing:"0.02em"}}>{link}</span>;})}
       </div>}
 
-      <section id="hero" className="hero-section" style={{position:"relative",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",textAlign:"center",padding:"100px 20px 80px",overflow:"hidden"}}>
-        <HeroCarousel />
+      <section id="hero" className="hero-section" style={{position:"relative",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",textAlign:"center",padding:"80px 20px 24px",overflow:"hidden"}}>
+        <HeroCarousel idx={heroIdx} setIdx={setHeroIdx} />
         <div style={{position:"relative",zIndex:2,maxWidth:560}}>
           <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:"clamp(48px,11vw,96px)",fontWeight:700,color:"#FAF7F2",marginBottom:18,lineHeight:1,textShadow:"0 2px 40px rgba(0,0,0,0.3)"}}>Maresol</h1>
           <p style={{fontSize:"clamp(15px,2.5vw,20px)",color:"rgba(250,247,242,0.9)",marginBottom:10,fontWeight:400}}>Curated stays across Los Angeles</p>
@@ -321,10 +313,19 @@ export default function App() {
             <div><span style={{fontSize:18,fontWeight:700,color:"#FAF7F2"}}>5</span><p style={{fontSize:9,color:"rgba(250,247,242,0.5)",letterSpacing:"0.1em",marginTop:2}}>PROPERTIES</p></div>
           </div>
         </div>
-        <div className="hero-explore" style={{position:"absolute",bottom:48,left:0,right:0,display:"flex",justifyContent:"center",zIndex:3}}>
+        <div style={{marginTop:"auto",position:"relative",zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
           <div className="explore-indicator" onClick={function(){scrollTo("properties");}} style={{cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,animation:"bounceDown 2s ease-in-out infinite"}}>
             <span style={{fontSize:12,color:"rgba(250,247,242,0.45)",letterSpacing:"0.15em",textTransform:"uppercase"}}>Explore</span>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(250,247,242,0.45)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div style={{display:"flex",justifyContent:"center",gap:10}}>
+            {HERO_IMAGES.map(function(img, i) {
+              return <button key={i} onClick={function(){setHeroIdx(i);}} style={{
+                width: i === heroIdx ? 32 : 10, height:10, borderRadius:5, border:"none", cursor:"pointer",
+                background: i === heroIdx ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.35)",
+                transition:"all 0.4s ease"
+              }}/>;
+            })}
           </div>
         </div>
       </section>

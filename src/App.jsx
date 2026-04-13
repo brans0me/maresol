@@ -39,7 +39,15 @@ var REVIEWS = [
   { name: "Mark", prop: "Silver Lake Loft", text: "Amazing location. Super stylish and very clean." },
   { name: "Ashley", prop: "Santa Monica Retreat", text: "Loved the beach vibe. Would absolutely stay again!" },
   { name: "David", prop: "Modern Studio", text: "Exactly as described. Smooth check-in process." },
-  { name: "Sophie", prop: "Coastal Escape", text: "Beautiful space. Great communication from host." }
+  { name: "Sophie", prop: "Coastal Escape", text: "Beautiful space. Great communication from host." },
+  { name: "Ryan", prop: "Urban Retreat", text: "Great location and super comfortable stay." },
+  { name: "Megan", prop: "Beach Bungalow", text: "Perfect for a weekend getaway. Clean and cozy." },
+  { name: "Carlos", prop: "Downtown Loft", text: "Stylish and modern. Would definitely return." },
+  { name: "Nina", prop: "Silver Lake Studio", text: "Loved the design and walkability of the area." },
+  { name: "Jake", prop: "Ocean View Stay", text: "Incredible views and very relaxing atmosphere." },
+  { name: "Emily", prop: "Cozy Studio", text: "Exactly what we needed. Simple and clean." },
+  { name: "Daniel", prop: "Modern Escape", text: "Great host and seamless experience." },
+  { name: "Lily", prop: "LA Hideaway", text: "Beautiful place. Felt like a boutique hotel." }
 ];
 
 
@@ -272,7 +280,6 @@ function ReviewsCarousel() {
   }
 
   useEffect(() => {
-    if (groups.length <= 1) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % groups.length);
     }, 3000);

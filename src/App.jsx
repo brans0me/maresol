@@ -36,7 +36,12 @@ var REVIEWS = [
   { name: "Juliana", prop: "MCM Studio", text: "Very clean. Super helpful and responsive. Highly recommend." },
   { name: "Kristian", prop: "Beach Oasis", text: "Perfect Long Beach getaway. Easy check in. Heartbeat!" },
   { name: "Zuo", prop: "Skyline Studio", text: "Safe walkable streets. Clean, modern. Extremely friendly host!" },
+  { name: "Mark", prop: "Silver Lake Loft", text: "Amazing location. Super stylish and very clean." },
+  { name: "Ashley", prop: "Santa Monica Retreat", text: "Loved the beach vibe. Would absolutely stay again!" },
+  { name: "David", prop: "Modern Studio", text: "Exactly as described. Smooth check-in process." },
+  { name: "Sophie", prop: "Coastal Escape", text: "Beautiful space. Great communication from host." }
 ];
+
 
 var LOCATIONS = [{ id: "all", label: "All" },{ id: "SM", label: "Santa Monica" },{ id: "LB", label: "Long Beach" },{ id: "SL", label: "Silver Lake" }];
 var MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -256,6 +261,74 @@ function ContactForm() {
   );
 }
 
+
+function ReviewsCarousel() {
+  const [index, setIndex] = useState(0);
+  const groupSize = 4;
+
+  const groups = [];
+  for (let i = 0; i < REVIEWS.length; i += groupSize) {
+    groups.push(REVIEWS.slice(i, i + groupSize));
+  }
+
+  useEffect(() => {
+    if (groups.length <= 1) return;
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % groups.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [groups.length]);
+
+  return (
+    <div>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: 14
+      }}>
+        {groups[index].map((r, i) => (
+          <div key={i} style={{
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            padding: 18
+          }}>
+            <div style={{display:"flex",gap:2,color:"#c4952a",marginBottom:6}}>
+              <StarIcon/><StarIcon/><StarIcon/><StarIcon/><StarIcon/>
+            </div>
+            <p style={{fontSize:12,color:"rgba(250,247,242,0.8)",marginBottom:10}}>
+              {r.text}
+            </p>
+            <div style={{fontSize:12,fontWeight:600,color:"#FAF7F2"}}>
+              {r.name}
+            </div>
+            <div style={{fontSize:10,color:"#6b635a"}}>
+              {r.prop}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ textAlign: "center", marginTop: 14 }}>
+        {groups.map((_, i) => (
+          <span
+            key={i}
+            onClick={() => setIndex(i)}
+            style={{
+              display: "inline-block",
+              width: 8,
+              height: 8,
+              margin: 5,
+              borderRadius: "50%",
+              background: i === index ? "#ffffff" : "#555",
+              cursor: "pointer"
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   var ls = useState("all"); var locFilter = ls[0]; var setLocFilter = ls[1];
   var ss = useState(null); var selectedProp = ss[0]; var setSelectedProp = ss[1];
@@ -338,21 +411,16 @@ export default function App() {
         {filtered.map(function(p){return <PropertyCard key={p.id} property={p} onBook={handleBook}/>;})}
       </section>
 
+      
       <section id="reviews" style={{padding:"60px 20px",background:"#1a1a1a"}}>
         <div style={{maxWidth:1000,margin:"0 auto"}}>
-          <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#FAF7F2",textAlign:"center",marginBottom:32}}>What Guests Say</h2>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}} className="revgrid">
-            {REVIEWS.map(function(r,i){return (
-              <div key={i} style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.06)",padding:18}}>
-                <div style={{display:"flex",gap:2,color:"#c4952a",marginBottom:6}}><StarIcon/><StarIcon/><StarIcon/><StarIcon/><StarIcon/></div>
-                <p style={{fontSize:12,color:"rgba(250,247,242,0.8)",lineHeight:1.7,marginBottom:10}}>{r.text}</p>
-                <div style={{fontSize:12,fontWeight:600,color:"#FAF7F2"}}>{r.name}</div>
-                <div style={{fontSize:10,color:"#6b635a",marginTop:2}}>{r.prop}</div>
-              </div>
-            );})}
-          </div>
+          <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:700,color:"#FAF7F2",textAlign:"center",marginBottom:32}}>
+            What Guests Say
+          </h2>
+          <ReviewsCarousel />
         </div>
       </section>
+
 
       <section id="about" style={{padding:"80px 20px",background:"#F5F1EB"}}>
         <div style={{maxWidth:800,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1.4fr",gap:48,alignItems:"center"}} className="propgrid">
